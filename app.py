@@ -113,6 +113,57 @@ def get_domain(url):
     return parsed.netloc
 
 # -----------------------------------------------------------------------------
+# 2b. LOGIN GATE
+# -----------------------------------------------------------------------------
+
+def check_login():
+    """Creates a professional Login Form requiring Email."""
+    
+    if "logged_in" not in st.session_state:
+        st.session_state["logged_in"] = False
+
+    if not st.session_state["logged_in"]:
+        # --- LOGIN SCREEN UI ---
+        st.markdown("""
+            <style>
+                .login-box {
+                    max-width: 400px; 
+                    margin: 0 auto; 
+                    padding: 40px;
+                    border: 1px solid #e0e0e0; 
+                    border-radius: 10px; 
+                    background-color: #ffffff; 
+                    text-align: center;
+                }
+            </style>
+        """, unsafe_allow_html=True)
+        
+        col1, col2, col3 = st.columns([1,2,1])
+        with col2:
+            st.markdown("## 🔒 LLMO Authority Guard")
+            st.info("Please sign in to access the Architect Tools.")
+            
+            email = st.text_input("Email Address", placeholder="name@company.com")
+            password = st.text_input("Access Key", type="password")
+            
+            if st.button("Login"):
+                if email and password == "AI-FY-VIP": 
+                    st.session_state["logged_in"] = True
+                    st.rerun()
+                elif not email:
+                    st.error("⚠️ Please enter your email address.")
+                else:
+                    st.error("❌ Invalid Access Key.")
+        
+        return False 
+    
+    return True
+
+# --- EXECUTE LOGIN CHECK ---
+if not check_login():
+    st.stop() # Stops the app here if not logged in
+    
+# -----------------------------------------------------------------------------
 # 3. SIDEBAR NAVIGATION
 # -----------------------------------------------------------------------------
 with st.sidebar:

@@ -19,34 +19,38 @@ st.set_page_config(
 # --- STEALTH MODE (Hide Streamlit Branding) ---
 hide_streamlit_style = """
     <style>
-    /* Hide the top right 'Manage App' menu */
     #MainMenu {visibility: hidden;}
-    /* Hide the 'Hosted with Streamlit' footer */
     footer {visibility: hidden;}
-    /* Hide the colored header bar at the top */
     header {visibility: hidden;}
     </style>
 """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
-# Brand Colors from memory
-PRIMARY_COLOR = "#5710ff"
-ACCENT_COLOR = "#cb6ce6"
-TEXT_COLOR = "#1f1f1f"
-BG_COLOR = "#ffffff"
+# --- BRANDING: DARK ARCHITECT THEME ---
+# Updated to match a modern AI/Dark Web Aesthetic
+PRIMARY_COLOR = "#5710ff"   # Electric Purple
+ACCENT_COLOR = "#cb6ce6"    # Soft Purple
+TEXT_COLOR = "#e0e0e0"      # Light Grey (for dark mode)
+BG_COLOR = "#0e1117"        # Dark Streamlit BG
+PANEL_BG = "#161b22"        # Slightly lighter for cards/sidebar
 
-# Custom CSS for "Blueprint/Architect" Aesthetic
+# Custom CSS for "Dark Blueprint" Aesthetic
 st.markdown(f"""
     <style>
-    /* Main Layout Tweaks */
-    .main {{
-        background-color: #f8f9fa;
-        font-family: 'Courier New', Courier, monospace; /* Monospaced for technical feel */
+    /* FORCE DARK MODE BACKGROUNDS */
+    .stApp {{
+        background-color: {BG_COLOR};
+        color: {TEXT_COLOR};
     }}
     
-    /* Headings */
+    .main {{
+        background-color: {BG_COLOR};
+        font-family: 'Courier New', Courier, monospace; 
+    }}
+
+    /* HEADINGS */
     h1, h2, h3 {{
-        color: {PRIMARY_COLOR};
+        color: white !important; /* White text for contrast */
         font-family: 'Arial', sans-serif;
         font-weight: 800;
         text-transform: uppercase;
@@ -54,29 +58,24 @@ st.markdown(f"""
     }}
     
     h1 {{
-        border-bottom: 4px solid {ACCENT_COLOR};
+        border-bottom: 3px solid {PRIMARY_COLOR}; /* Purple Underline */
         padding-bottom: 10px;
     }}
     
-    /* Sidebar Styling */
+    /* SIDEBAR STYLING */
     [data-testid="stSidebar"] {{
-        background-color: #eef2f5;
-        border-right: 2px solid #d1d1d1;
+        background-color: {PANEL_BG};
+        border-right: 1px solid #30363d;
     }}
     
-    /* Custom Info Box Styling */
-    .stAlert {{
-        border-left: 5px solid {ACCENT_COLOR};
-        background-color: #f0f2f6;
+    /* INPUT FIELDS (Dark Mode Fix) */
+    .stTextInput > div > div > input {{
+        color: white;
+        background-color: #0d1117;
+        border: 1px solid #30363d;
     }}
     
-    /* Code Blocks */
-    .stCodeBlock {{
-        border: 1px solid {PRIMARY_COLOR};
-        border-radius: 5px;
-    }}
-    
-    /* Buttons */
+    /* BUTTONS */
     .stButton > button {{
         background-color: {PRIMARY_COLOR};
         color: white;
@@ -84,16 +83,31 @@ st.markdown(f"""
         border-radius: 4px;
         font-weight: bold;
         transition: all 0.3s;
+        width: 100%; /* Full width buttons look better */
     }}
     .stButton > button:hover {{
         background-color: {ACCENT_COLOR};
-        color: white;
+        box-shadow: 0 0 10px {PRIMARY_COLOR}; /* Glowing effect */
+    }}
+
+    /* INFO BOXES (Alerts) */
+    .stAlert {{
+        background-color: {PANEL_BG};
+        color: {TEXT_COLOR};
+        border-left: 4px solid {ACCENT_COLOR};
     }}
     
-    /* Blueprint lines */
+    /* CODE BLOCKS */
+    .stCodeBlock {{
+        border: 1px solid #30363d;
+        border-radius: 5px;
+        background-color: #000000;
+    }}
+    
+    /* DIVIDERS */
     hr {{
         border: 0;
-        border-top: 1px dashed {PRIMARY_COLOR};
+        border-top: 1px dashed #30363d;
     }}
     </style>
 """, unsafe_allow_html=True)
@@ -113,7 +127,7 @@ def get_domain(url):
     return parsed.netloc
 
 # -----------------------------------------------------------------------------
-# 2b. LOGIN GATE
+# 2b. LOGIN GATE (UPDATED FOR DARK MODE)
 # -----------------------------------------------------------------------------
 
 def check_login():
@@ -123,17 +137,18 @@ def check_login():
         st.session_state["logged_in"] = False
 
     if not st.session_state["logged_in"]:
-        # --- LOGIN SCREEN UI ---
+        # --- LOGIN SCREEN UI (Dark Version) ---
         st.markdown("""
             <style>
                 .login-box {
                     max-width: 400px; 
                     margin: 0 auto; 
                     padding: 40px;
-                    border: 1px solid #e0e0e0; 
+                    border: 1px solid #30363d; 
                     border-radius: 10px; 
-                    background-color: #ffffff; 
+                    background-color: #161b22; 
                     text-align: center;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
                 }
             </style>
         """, unsafe_allow_html=True)
@@ -147,6 +162,7 @@ def check_login():
             password = st.text_input("Access Key", type="password")
             
             if st.button("Login"):
+                # CREDENTIALS CHECK
                 if email and password == "AI-FY-VIP": 
                     st.session_state["logged_in"] = True
                     st.rerun()
@@ -161,7 +177,7 @@ def check_login():
 
 # --- EXECUTE LOGIN CHECK ---
 if not check_login():
-    st.stop() # Stops the app here if not logged in
+    st.stop()
     
 # -----------------------------------------------------------------------------
 # 3. SIDEBAR NAVIGATION
@@ -221,7 +237,7 @@ if selected_module == "Module A: Robots.txt Architect":
         # General Rule
         robots_content += "User-agent: *\nAllow: /\n\n"
         
-        # Specific AI Rules (Explicit Allows are good practice for clarity)
+        # Specific AI Rules
         if allow_gpt:
             robots_content += "User-agent: GPTBot\nAllow: /\n\n"
         if allow_cc:
@@ -259,7 +275,6 @@ elif selected_module == "Module B: Sitemap Generator":
     
     generate_btn = st.button("Attempt Auto-Generation")
     
-    # State management for results
     if 'sitemap_urls' not in st.session_state:
         st.session_state['sitemap_urls'] = []
     if 'use_manual' not in st.session_state:
@@ -278,26 +293,22 @@ elif selected_module == "Module B: Sitemap Generator":
             base_domain = get_domain(target_url)
             
             found_links = set()
-            # Add homepage
             found_links.add(target_url.rstrip('/'))
             
             for link in soup.find_all('a', href=True):
                 href = link['href']
                 full_url = urljoin(target_url, href)
                 
-                # Basic filter for internal links only
                 if get_domain(full_url) == base_domain:
-                    # Remove anchors and query params for cleaner sitemap
                     clean_url = full_url.split('#')[0].split('?')[0]
                     if clean_url.startswith('http'): 
                         found_links.add(clean_url)
             
             if len(found_links) < 2:
-                # If scraping yielded practically nothing, trigger manual fallback
                 st.warning("Could not find enough links automatically. Switching to Manual Builder.")
                 st.session_state['use_manual'] = True
             else:
-                st.session_state['sitemap_urls'] = list(found_links)[:50] # Limit to 50 for demo
+                st.session_state['sitemap_urls'] = list(found_links)[:50] 
                 st.session_state['use_manual'] = False
                 st.success(f"Success! Found {len(st.session_state['sitemap_urls'])} internal URLs.")
                 
@@ -305,9 +316,6 @@ elif selected_module == "Module B: Sitemap Generator":
             st.error(f"Auto-scan failed (Site might block bots or have security headers). Error: {e}")
             st.session_state['use_manual'] = True
 
-    # ------------------
-    # Manual Builder Logic (Fallback)
-    # ------------------
     if st.session_state['use_manual']:
         st.markdown("---")
         st.subheader("✏️ Manual Sitemap Builder")
@@ -326,9 +334,6 @@ elif selected_module == "Module B: Sitemap Generator":
                 manual_list = [u for u in [url_1, url_2, url_3, url_4, url_5] if u.strip()]
                 st.session_state['sitemap_urls'] = [validate_url(u) for u in manual_list]
 
-    # ------------------
-    # Output XML
-    # ------------------
     if st.session_state['sitemap_urls']:
         st.subheader("2. Generated XML Code")
         
@@ -387,7 +392,6 @@ elif selected_module == "Module C: Schema Builder":
     with col_output:
         st.subheader("2. JSON-LD Output")
         
-        # Construct Dictionary
         schema_data = {
             "@context": "https://schema.org",
             "@type": schema_type,
@@ -402,12 +406,10 @@ elif selected_module == "Module C: Schema Builder":
         else:
             schema_data["industry"] = title_role
             
-        # Add Socials
         if linkedin: schema_data["sameAs"].append(linkedin)
         if twitter: schema_data["sameAs"].append(twitter)
         if other_social: schema_data["sameAs"].append(other_social)
         
-        # Convert to nicely formatted JSON string
         json_string = json.dumps(schema_data, indent=2)
         
         html_wrapper = f"""<script type="application/ld+json">
@@ -440,7 +442,7 @@ elif selected_module == "Module D: SEO & Meta Engineer":
         with desc_col2:
             st.metric("Char Count", len(meta_desc))
             if len(meta_desc) > 160:
-                st.warning("⚠️ Over 160 chars (might get truncated).")
+                st.warning("⚠️ Over 160 chars.")
             else:
                 st.success("Length Good.")
 
@@ -465,14 +467,12 @@ elif selected_module == "Module D: SEO & Meta Engineer":
     if generate_meta:
         st.subheader("Output HTML")
         
-        # Build robots string
         robots_directives = []
         robots_directives.append("index" if index_opt else "noindex")
         robots_directives.append("follow" if follow_opt else "nofollow")
         robots_str = ", ".join(robots_directives)
         
-        html_block = f"""<!-- Generated by LLMO Authority Guard -->
-<title>{page_title}</title>
+        html_block = f"""<title>{page_title}</title>
 <meta name="description" content="{meta_desc}">
 <meta name="keywords" content="{keywords}">
 <meta name="author" content="{author}">

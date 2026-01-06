@@ -16,6 +16,19 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+# --- STEALTH MODE (Hide Streamlit Branding) ---
+hide_streamlit_style = """
+    <style>
+    /* Hide the top right 'Manage App' menu */
+    #MainMenu {visibility: hidden;}
+    /* Hide the 'Hosted with Streamlit' footer */
+    footer {visibility: hidden;}
+    /* Hide the colored header bar at the top */
+    header {visibility: hidden;}
+    </style>
+"""
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+
 # Brand Colors from memory
 PRIMARY_COLOR = "#5710ff"
 ACCENT_COLOR = "#cb6ce6"

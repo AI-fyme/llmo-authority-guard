@@ -27,17 +27,16 @@ hide_streamlit_style = """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 # --- BRANDING: MODERN SAAS AESTHETIC ---
-# Extracted from your reference image (Light, Airy, Purple Gradients)
-PRIMARY_COLOR = "#6d28d9"   # Deep Violet (Reference style)
-ACCENT_COLOR = "#8b5cf6"    # Lighter Violet for gradients
-TEXT_COLOR = "#1e293b"      # Slate 800 (Soft Black)
+PRIMARY_COLOR = "#6d28d9"   # Deep Violet
+ACCENT_COLOR = "#8b5cf6"    # Lighter Violet
+TEXT_COLOR = "#0f172a"      # Dark Slate (Force Dark Text)
 BG_COLOR = "#f8faff"        # Very light Cloud Blue/Gray
 SIDEBAR_BG = "#ffffff"      # Pure White
 
 # Custom CSS for "Clean SaaS" Aesthetic
 st.markdown(f"""
     <style>
-    /* MAIN BACKGROUND */
+    /* FORCE LIGHT MODE DEFAULTS */
     .stApp {{
         background-color: {BG_COLOR};
         color: {TEXT_COLOR};
@@ -50,7 +49,7 @@ st.markdown(f"""
 
     /* HEADINGS */
     h1, h2, h3 {{
-        color: #0f172a !important; /* Dark Slate for headers */
+        color: #0f172a !important;
         font-family: 'Inter', sans-serif;
         font-weight: 700;
         letter-spacing: -0.5px;
@@ -64,14 +63,27 @@ st.markdown(f"""
         font-size: 2.5rem !important;
     }}
     
+    /* FORCE TEXT VISIBILITY (Checkboxes & Radios) */
+    .stCheckbox label p, .stRadio label p {{
+        color: {TEXT_COLOR} !important;
+        font-weight: 500;
+    }}
+    p {{
+        color: {TEXT_COLOR};
+    }}
+
     /* SIDEBAR STYLING */
     [data-testid="stSidebar"] {{
         background-color: {SIDEBAR_BG};
-        border-right: 1px solid #e2e8f0; /* Light border */
-        box-shadow: 4px 0 24px rgba(0,0,0,0.02); /* Very soft shadow */
+        border-right: 1px solid #e2e8f0;
+        box-shadow: 4px 0 24px rgba(0,0,0,0.02);
+    }}
+    /* Force Sidebar Text Dark */
+    [data-testid="stSidebar"] p, [data-testid="stSidebar"] span {{
+        color: {TEXT_COLOR} !important;
     }}
     
-    /* INPUT FIELDS (Modern clean look) */
+    /* INPUT FIELDS */
     .stTextInput > div > div > input, .stTextArea > div > div > textarea {{
         color: {TEXT_COLOR};
         background-color: #ffffff;
@@ -79,15 +91,11 @@ st.markdown(f"""
         border-radius: 8px;
         padding: 10px;
     }}
-    .stTextInput > div > div > input:focus {{
-        border-color: {PRIMARY_COLOR};
-        box-shadow: 0 0 0 2px rgba(109, 40, 217, 0.1);
-    }}
     
-    /* BUTTONS (Gradient & Shadow) */
+    /* BUTTONS */
     .stButton > button {{
         background: linear-gradient(135deg, {PRIMARY_COLOR} 0%, {ACCENT_COLOR} 100%);
-        color: white;
+        color: white !important;
         border: none;
         border-radius: 8px;
         font-weight: 600;
@@ -99,10 +107,9 @@ st.markdown(f"""
     .stButton > button:hover {{
         transform: translateY(-1px);
         box-shadow: 0 10px 15px -3px rgba(109, 40, 217, 0.4);
-        color: white;
     }}
 
-    /* INFO BOXES (Soft Cards) */
+    /* INFO BOXES */
     .stAlert {{
         background-color: #ffffff;
         color: {TEXT_COLOR};
@@ -117,6 +124,23 @@ st.markdown(f"""
         border: 1px solid #e2e8f0;
         border-radius: 8px;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }}
+
+    /* EXPANDER STYLING (The "How To" Box) */
+    .streamlit-expanderHeader {{
+        background-color: #f1f5f9; /* Light Grey Header */
+        color: {TEXT_COLOR} !important;
+        border-radius: 8px;
+        font-weight: 600;
+        border: 1px solid #e2e8f0;
+    }}
+    .streamlit-expanderContent {{
+        background-color: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-top: none;
+        border-bottom-left-radius: 8px;
+        border-bottom-right-radius: 8px;
+        color: {TEXT_COLOR};
     }}
     
     /* DIVIDERS */
@@ -143,7 +167,7 @@ def get_domain(url):
     return parsed.netloc
 
 # -----------------------------------------------------------------------------
-# 2b. LOGIN GATE (UPDATED FOR SAAS AESTHETIC)
+# 2b. LOGIN GATE (CLEAN CARD STYLE)
 # -----------------------------------------------------------------------------
 
 def check_login():
@@ -153,7 +177,7 @@ def check_login():
         st.session_state["logged_in"] = False
 
     if not st.session_state["logged_in"]:
-        # --- LOGIN SCREEN UI (Clean White Card) ---
+        # --- LOGIN SCREEN UI ---
         st.markdown("""
             <style>
                 .login-box {
@@ -182,7 +206,6 @@ def check_login():
             st.markdown("<div style='height: 20px;'></div>", unsafe_allow_html=True)
             
             if st.button("Login to Dashboard"):
-                # CREDENTIALS CHECK
                 if email and password == "AI-FY-VIP": 
                     st.session_state["logged_in"] = True
                     st.rerun()
@@ -254,7 +277,6 @@ if selected_module == "Module A: Robots.txt Architect":
     with col2:
         st.subheader("2. Generated Code")
         
-        # --- THIS WAS THE BROKEN LINE ---
         robots_content = "# Generated by LLMO Authority Guard\n\n"
         
         # General Rule
@@ -272,10 +294,239 @@ if selected_module == "Module A: Robots.txt Architect":
             
         st.code(robots_content, language="text")
 
-    with st.expander("🛠️ How to Check & Install"):
+    # EXPANDER SECTION
+    with st.expander("🛠️ How to Check & Install", expanded=False):
         st.markdown("""
-        1.  **Copy** the code above.
-        2.  **Paste** it into a text file named `robots.txt`.
-        3.  **Upload** this file to the "root" folder of your website hosting.
-        4.  **Verify** by visiting: `yourdomain.com/robots.txt`.
+        **Installation Steps:**
+        1.  **Copy** the code generated in the black box above.
+        2.  **Paste** it into a new text file named `robots.txt` on your computer.
+        3.  **Upload** this file to the "root" folder of your website hosting (public_html).
+        4.  **Verify** the installation by visiting: `yourdomain.com/robots.txt`.
         """)
+
+# -----------------------------------------------------------------------------
+# 5. MODULE B: SITEMAP GENERATOR
+# -----------------------------------------------------------------------------
+elif selected_module == "Module B: Sitemap Generator":
+    st.title("🗺️ Sitemap Generator")
+    st.write("Map your most important pages so AI models can find them.")
+    
+    st.info(
+        "**Why this matters:** A clean XML sitemap helps LLMs discover deep pages "
+        "that might otherwise be missed during a crawl."
+    )
+
+    st.subheader("1. Scan Website")
+    target_url = st.text_input("Enter your website URL:", placeholder="https://mysite.com")
+    
+    generate_btn = st.button("Attempt Auto-Scan")
+    
+    if 'sitemap_urls' not in st.session_state:
+        st.session_state['sitemap_urls'] = []
+    if 'use_manual' not in st.session_state:
+        st.session_state['use_manual'] = False
+
+    if generate_btn and target_url:
+        target_url = validate_url(target_url)
+        st.write(f"Scanning {target_url}...")
+        
+        try:
+            headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}
+            response = requests.get(target_url, headers=headers, timeout=5)
+            response.raise_for_status()
+            
+            soup = BeautifulSoup(response.text, 'html.parser')
+            base_domain = get_domain(target_url)
+            
+            found_links = set()
+            found_links.add(target_url.rstrip('/'))
+            
+            for link in soup.find_all('a', href=True):
+                href = link['href']
+                full_url = urljoin(target_url, href)
+                
+                if get_domain(full_url) == base_domain:
+                    clean_url = full_url.split('#')[0].split('?')[0]
+                    if clean_url.startswith('http'): 
+                        found_links.add(clean_url)
+            
+            if len(found_links) < 2:
+                st.warning("Could not find enough links automatically. Switching to Manual Builder.")
+                st.session_state['use_manual'] = True
+            else:
+                st.session_state['sitemap_urls'] = list(found_links)[:50] 
+                st.session_state['use_manual'] = False
+                st.success(f"Success! Found {len(st.session_state['sitemap_urls'])} internal URLs.")
+                
+        except Exception as e:
+            st.error(f"Auto-scan failed (Site might block bots or have security headers). Error: {e}")
+            st.session_state['use_manual'] = True
+
+    if st.session_state['use_manual']:
+        st.markdown("---")
+        st.subheader("✏️ Manual Sitemap Builder")
+        st.caption("Since we couldn't scan the site perfectly, please list your 5 most important pages below.")
+        
+        with st.form("manual_sitemap_form"):
+            url_1 = st.text_input("Homepage URL", value=target_url if target_url else "")
+            url_2 = st.text_input("Service/Product Page 1")
+            url_3 = st.text_input("Service/Product Page 2")
+            url_4 = st.text_input("About Us Page")
+            url_5 = st.text_input("Contact/Blog Page")
+            
+            submit_manual = st.form_submit_button("Generate XML from List")
+            
+            if submit_manual:
+                manual_list = [u for u in [url_1, url_2, url_3, url_4, url_5] if u.strip()]
+                st.session_state['sitemap_urls'] = [validate_url(u) for u in manual_list]
+
+    if st.session_state['sitemap_urls']:
+        st.subheader("2. Generated XML Code")
+        
+        current_date = datetime.date.today().isoformat()
+        xml_output = '<?xml version="1.0" encoding="UTF-8"?>\n'
+        xml_output += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        
+        for url in st.session_state['sitemap_urls']:
+            xml_output += '  <url>\n'
+            xml_output += f'    <loc>{url}</loc>\n'
+            xml_output += f'    <lastmod>{current_date}</lastmod>\n'
+            xml_output += '    <changefreq>monthly</changefreq>\n'
+            xml_output += '    <priority>0.8</priority>\n'
+            xml_output += '  </url>\n'
+        
+        xml_output += '</urlset>'
+        
+        st.code(xml_output, language='xml')
+        
+        # EXPANDER FOR SITEMAP
+        with st.expander("🚀 Where to Submit", expanded=False):
+            st.markdown("""
+            1.  Save the code above as `sitemap.xml`.
+            2.  Upload it to your root directory (`yourdomain.com/sitemap.xml`).
+            3.  Go to **Google Search Console** > **Sitemaps**.
+            4.  Enter the URL of your sitemap and click Submit.
+            """)
+
+# -----------------------------------------------------------------------------
+# 6. MODULE C: SCHEMA BUILDER
+# -----------------------------------------------------------------------------
+elif selected_module == "Module C: Schema Builder":
+    st.title("🏗️ Schema \"Ground Truth\" Builder")
+    st.write("Create the code that establishes your digital identity.")
+    
+    st.info(
+        "**Why this matters:** Schema (JSON-LD) is the language machines speak. "
+        "It tells LLMs explicitly who you are and connects your website to your LinkedIn."
+    )
+
+    col_input, col_output = st.columns(2)
+    
+    with col_input:
+        st.subheader("1. Entity Details")
+        schema_type = st.selectbox("Entity Type", ["Person", "Organization"])
+        name = st.text_input("Name (Person or Company Name)")
+        title_role = st.text_input("Job Title / Industry", help="E.g., CEO, Consultant, or 'Marketing Agency'")
+        website = st.text_input("Website URL")
+        bio = st.text_area("Short Bio", height=100, placeholder="A brief description of who you are...")
+        
+        st.markdown("**'SameAs' Links (Social Proof)**")
+        linkedin = st.text_input("LinkedIn URL")
+        twitter = st.text_input("X / Twitter URL")
+        other_social = st.text_input("Other URL (YouTube/Facebook)")
+
+    with col_output:
+        st.subheader("2. JSON-LD Output")
+        
+        schema_data = {
+            "@context": "https://schema.org",
+            "@type": schema_type,
+            "name": name if name else "[Name]",
+            "url": website if website else "[Website URL]",
+            "description": bio if bio else "[Bio]",
+            "sameAs": []
+        }
+        
+        if schema_type == "Person":
+            schema_data["jobTitle"] = title_role
+        else:
+            schema_data["industry"] = title_role
+            
+        if linkedin: schema_data["sameAs"].append(linkedin)
+        if twitter: schema_data["sameAs"].append(twitter)
+        if other_social: schema_data["sameAs"].append(other_social)
+        
+        json_string = json.dumps(schema_data, indent=2)
+        
+        html_wrapper = f"""<script type="application/ld+json">
+{json_string}
+</script>"""
+        
+        st.code(html_wrapper, language="html")
+        
+        st.success("✅ Ready to Paste! Place this code into the <head> or <body> of your homepage.")
+
+# -----------------------------------------------------------------------------
+# 7. MODULE D: SEO & META DATA ENGINEER
+# -----------------------------------------------------------------------------
+elif selected_module == "Module D: SEO & Meta Engineer":
+    st.title("⚙️ SEO & Meta Engineer")
+    st.write("Generate the perfect HTML headers for your pages.")
+    
+    st.info(
+        "**Why this matters:** Title tags and Meta descriptions are the first thing an LLM reads. "
+        "They determine how the AI summarizes your page."
+    )
+
+    with st.form("meta_form"):
+        st.subheader("Basic Metadata")
+        page_title = st.text_input("Page Title", max_chars=60, help="Keep under 60 characters for best display.")
+        
+        desc_col1, desc_col2 = st.columns([3, 1])
+        with desc_col1:
+            meta_desc = st.text_area("Meta Description", max_chars=300, height=100)
+        with desc_col2:
+            st.metric("Char Count", len(meta_desc))
+            if len(meta_desc) > 160:
+                st.warning("⚠️ Over 160 chars.")
+            else:
+                st.success("Length Good.")
+
+        keywords = st.text_input("Keywords (Comma separated)", placeholder="LLM, AI optimization, consulting")
+        author = st.text_input("Author Name")
+        
+        st.markdown("---")
+        st.subheader("Advanced Configuration")
+        col_adv1, col_adv2 = st.columns(2)
+        
+        with col_adv1:
+            canonical = st.checkbox("Generate Canonical Link (Self-referencing)", value=True)
+            page_url = st.text_input("Full Page URL (for Canonical)", disabled=not canonical)
+            
+        with col_adv2:
+            st.markdown("**Robots Meta Instructions**")
+            index_opt = st.checkbox("index (Allow indexing)", value=True)
+            follow_opt = st.checkbox("follow (Follow links)", value=True)
+        
+        generate_meta = st.form_submit_button("Generate HTML Block")
+
+    if generate_meta:
+        st.subheader("Output HTML")
+        
+        robots_directives = []
+        robots_directives.append("index" if index_opt else "noindex")
+        robots_directives.append("follow" if follow_opt else "nofollow")
+        robots_str = ", ".join(robots_directives)
+        
+        html_block = f"""<title>{page_title}</title>
+<meta name="description" content="{meta_desc}">
+<meta name="keywords" content="{keywords}">
+<meta name="author" content="{author}">
+<meta name="robots" content="{robots_str}">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+"""
+        if canonical and page_url:
+            html_block += f'<link rel="canonical" href="{page_url}">\n'
+            
+        st.code(html_block, language="html")
+        st.info("Copy this block and paste it between the `<head>` and `</head>` tags of your HTML file.")

@@ -7,13 +7,13 @@ import json
 import re
 
 # -----------------------------------------------------------------------------
-# 1. PAGE CONFIGURATION & STYLING
+# 1. PAGE CONFIGURATION (CRITICAL: FORCES SIDEBAR OPEN)
 # -----------------------------------------------------------------------------
 st.set_page_config(
     page_title="LLMO Authority Guard",
     page_icon="🛡️",
     layout="wide",
-    initial_sidebar_state="expanded" 
+    initial_sidebar_state="expanded" # <--- 1. Forces it open on load
 )
 
 # --- BRANDING: MODERN SAAS AESTHETIC ---
@@ -26,35 +26,34 @@ SIDEBAR_BG = "#ffffff"      # Pure White
 # --- MASTER CSS BLOCK ---
 st.markdown(f"""
     <style>
-    /* 1. CRITICAL SIDEBAR FIX */
-    /* We make the header container VISIBLE so the arrow is clickable */
-    header {{
-        visibility: visible !important;
-        background: transparent !important;
+    /* --- CRITICAL SIDEBAR FIXES --- */
+    
+    /* 1. Ensure the Sidebar is visible */
+    [data-testid="stSidebar"] {{
+        display: block !important;
+        background-color: {SIDEBAR_BG};
+        border-right: 1px solid #e2e8f0;
     }}
     
-    /* We hide ONLY the specific elements we don't want */
-    #MainMenu {{display: none;}} 
-    footer {{display: none;}}    
-    .stDeployButton {{display:none;}} 
-    
-    /* Force the Sidebar Toggle Arrow to be dark (visible against white) */
-    header button {{
-        color: {TEXT_COLOR} !important;
+    /* 2. OPTIONAL: Hide the 'Close Sidebar' (X) button so it STAYS open */
+    [data-testid="stSidebar"] button {{
+        display: none !important;
     }}
+    
+    /* 3. Hide only the 'Deploy' button and Footer (Leave Header Visible) */
+    .stDeployButton {{display:none;}}
+    footer {{visibility: hidden;}}
+    #MainMenu {{visibility: hidden;}} /* Hides the 3-dot menu safely */
 
-    /* 2. MAIN APP STYLING */
+    /* --- MAIN APP STYLING --- */
+    
     .stApp {{
         background-color: {BG_COLOR};
         color: {TEXT_COLOR};
         font-family: 'Inter', sans-serif;
     }}
     
-    .main {{
-        background-color: {BG_COLOR};
-    }}
-
-    /* 3. TYPOGRAPHY */
+    /* HEADINGS */
     h1, h2, h3 {{
         color: #0f172a !important;
         font-family: 'Inter', sans-serif;
@@ -70,17 +69,7 @@ st.markdown(f"""
         font-size: 2.5rem !important;
     }}
     
-    /* 4. SIDEBAR STYLING */
-    [data-testid="stSidebar"] {{
-        background-color: {SIDEBAR_BG};
-        border-right: 1px solid #e2e8f0;
-        box-shadow: 4px 0 24px rgba(0,0,0,0.02);
-    }}
-    [data-testid="stSidebar"] p, [data-testid="stSidebar"] span {{
-        color: {TEXT_COLOR} !important;
-    }}
-    
-    /* 5. INPUT FIELDS */
+    /* INPUT FIELDS */
     .stTextInput > div > div > input, .stTextArea > div > div > textarea {{
         color: {TEXT_COLOR};
         background-color: #ffffff;
@@ -89,7 +78,7 @@ st.markdown(f"""
         padding: 10px;
     }}
     
-    /* 6. BUTTONS */
+    /* BUTTONS */
     .stButton > button {{
         background: linear-gradient(135deg, {PRIMARY_COLOR} 0%, {ACCENT_COLOR} 100%);
         color: white !important;
@@ -106,7 +95,7 @@ st.markdown(f"""
         box-shadow: 0 10px 15px -3px rgba(109, 40, 217, 0.4);
     }}
 
-    /* 7. INFO BOXES & CARDS */
+    /* INFO BOXES */
     .stAlert {{
         background-color: #ffffff;
         color: {TEXT_COLOR};
@@ -116,19 +105,18 @@ st.markdown(f"""
         border-radius: 8px;
     }}
     
-    .stCodeBlock {{
-        border: 1px solid #e2e8f0;
-        border-radius: 8px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-    }}
-
-    /* 8. VISIBILITY FIXES FOR TEXT */
+    /* TEXT VISIBILITY FIXES */
     .stCheckbox label p, .stRadio label p {{
         color: {TEXT_COLOR} !important;
         font-weight: 500;
     }}
     p {{
         color: {TEXT_COLOR};
+    }}
+    
+    /* Sidebar Text */
+    [data-testid="stSidebar"] p, [data-testid="stSidebar"] span {{
+        color: {TEXT_COLOR} !important;
     }}
     </style>
 """, unsafe_allow_html=True)
@@ -158,7 +146,7 @@ def check_login():
         st.session_state["logged_in"] = False
 
     if not st.session_state["logged_in"]:
-        # --- LOGIN UI ---
+        # --- LOGIN SCREEN UI ---
         st.markdown("""
             <style>
                 .login-box {
@@ -202,7 +190,7 @@ if not check_login():
     st.stop()
 
 # -----------------------------------------------------------------------------
-# 3. SIDEBAR NAVIGATION (Only visible after login)
+# 3. SIDEBAR NAVIGATION
 # -----------------------------------------------------------------------------
 with st.sidebar:
     st.title("🛡️ Authority Guard")

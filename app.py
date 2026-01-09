@@ -13,7 +13,7 @@ st.set_page_config(
     page_title="LLMO Authority Guard",
     page_icon="🛡️",
     layout="wide",
-    initial_sidebar_state="expanded" # Forces sidebar open
+    initial_sidebar_state="expanded" 
 )
 
 # --- BRANDING: MODERN SAAS AESTHETIC ---
@@ -26,17 +26,22 @@ SIDEBAR_BG = "#ffffff"      # Pure White
 # --- MASTER CSS BLOCK ---
 st.markdown(f"""
     <style>
-    /* 1. SIDEBAR & HEADER FIXES */
-    /* Make header transparent but VISIBLE so the arrow/hamburger are clickable */
+    /* 1. CRITICAL SIDEBAR FIX */
+    /* We make the header container VISIBLE so the arrow is clickable */
     header {{
         visibility: visible !important;
         background: transparent !important;
     }}
     
-    /* Hide specific Streamlit items we don't want */
-    #MainMenu {{visibility: hidden;}} 
-    footer {{visibility: hidden;}}    
+    /* We hide ONLY the specific elements we don't want */
+    #MainMenu {{display: none;}} 
+    footer {{display: none;}}    
     .stDeployButton {{display:none;}} 
+    
+    /* Force the Sidebar Toggle Arrow to be dark (visible against white) */
+    header button {{
+        color: {TEXT_COLOR} !important;
+    }}
 
     /* 2. MAIN APP STYLING */
     .stApp {{
@@ -197,7 +202,7 @@ if not check_login():
     st.stop()
 
 # -----------------------------------------------------------------------------
-# 3. SIDEBAR NAVIGATION
+# 3. SIDEBAR NAVIGATION (Only visible after login)
 # -----------------------------------------------------------------------------
 with st.sidebar:
     st.title("🛡️ Authority Guard")
